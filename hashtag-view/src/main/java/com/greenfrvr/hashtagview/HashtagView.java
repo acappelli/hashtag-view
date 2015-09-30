@@ -517,30 +517,34 @@ public class HashtagView extends LinearLayout {
     }
 
     private int evaluateRowsQuantity() {
-        if (widthList == null || widthList.isEmpty()) return 0;
+        try {
+            if (widthList == null || widthList.isEmpty()) return 0;
 
-        int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
-        int[] rowsWidth = new int[rows];
-        int iterationLimit = rows + widthList.size();
+            int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
+            int[] rowsWidth = new int[rows];
+            int iterationLimit = rows + widthList.size();
 
-        int counter = 0;
-        while (!widthList.isEmpty()) {
-            rowIteration:
-            for (int i = 0; i < rows; i++) {
-                if (counter > iterationLimit)
-                    return rows + 1;
+            int counter = 0;
+            while (!widthList.isEmpty()) {
+                rowIteration:
+                for (int i = 0; i < rows; i++) {
+                    if (counter > iterationLimit)
+                        return rows + 1;
 
-                counter++;
-                for (Float item : widthList) {
-                    if (rowsWidth[i] + item <= getWidth()) {
-                        rowsWidth[i] += item;
-                        widthList.remove(item);
-                        continue rowIteration;
+                    counter++;
+                    for (Float item : widthList) {
+                        if (rowsWidth[i] + item <= getWidth()) {
+                            rowsWidth[i] += item;
+                            widthList.remove(item);
+                            continue rowIteration;
+                        }
                     }
                 }
             }
+            return rows;
+        } catch (Exception e) {
+            return 0;
         }
-        return rows;
     }
 
     private View inflateItemView(final ItemData item) {
